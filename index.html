@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -27,7 +29,7 @@
       </div>
     </header>
 
-    <section class="card" aria-live="polite">
+    <section class="card" id="mainCard" aria-live="polite">
       <div class="cardTop">
         <div class="meta">
           <span id="progressText" class="progressText">Step 0 of 18</span>
@@ -37,19 +39,38 @@
         </div>
       </div>
 
-      <h2 id="qTitle" class="qTitle">Ready?</h2>
-      <div id="qText" class="qText">Answer a short assessment and get a study plan.</div>
+      <div id="contentArea">
+        <h2 id="qTitle" class="qTitle">Ready?</h2>
+        
+        <div id="resultContainer" class="resultContainer hidden">
+          <div id="qTextResult" class="qText"></div>
+          
+          <div id="timerBox" class="timerBox hidden">
+            <div class="timerDisplay" id="timerDisplay">25:00</div>
+            <div class="timerControls">
+              <button id="timerStartBtn" class="btn small">Start Focus</button>
+              <button id="timerResetBtn" class="btn small ghost">Reset</button>
+            </div>
+          </div>
+        </div>
 
-      <div id="choices" class="choices"></div>
+        <div id="qText" class="qText">Answer a short assessment and get a study plan.</div>
+
+        <div id="choices" class="choices"></div>
+      </div>
 
       <div class="actions">
         <button id="startBtn" class="btn primary">Start</button>
         <button id="prevBtn" class="btn ghost hidden">Back</button>
         <button id="nextBtn" class="btn" disabled>Next</button>
+        <div id="resultActions" class="resultActions hidden">
+          <button id="saveImgBtn" class="btn secondary">📸 Save Image</button>
+          <button id="shareBtn" class="btn secondary">🔗 Share</button>
+        </div>
         <button id="restartBtn" class="btn ghost hidden">Restart</button>
       </div>
 
-      <div class="aiBox">
+      <div class="aiBox" id="aiBox">
         <div class="aiTop">
           <div class="aiTitle" id="aiTitle">AI (not available for now)</div>
           <div class="aiHint" id="aiHint">Upload your slides PDF to tailor the plan to your course content.</div>
