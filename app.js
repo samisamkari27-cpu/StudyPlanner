@@ -1,16 +1,30 @@
+// --- DOM Elements ---
 const qTitle = document.getElementById("qTitle");
 const qText = document.getElementById("qText");
+const qTextResult = document.getElementById("qTextResult");
 const choices = document.getElementById("choices");
 const startBtn = document.getElementById("startBtn");
 const nextBtn = document.getElementById("nextBtn");
 const prevBtn = document.getElementById("prevBtn");
 const restartBtn = document.getElementById("restartBtn");
+const resultActions = document.getElementById("resultActions");
+const saveImgBtn = document.getElementById("saveImgBtn");
+const shareBtn = document.getElementById("shareBtn");
+
 const progressText = document.getElementById("progressText");
 const progressBar = document.getElementById("progressBar");
-const pill = document.getElementById("pill");
 
+// Sections to toggle
+const resultContainer = document.getElementById("resultContainer");
+const timerBox = document.getElementById("timerBox");
+
+// Timer Elements
+const timerDisplay = document.getElementById("timerDisplay");
+const timerStartBtn = document.getElementById("timerStartBtn");
+const timerResetBtn = document.getElementById("timerResetBtn");
+
+// AI & Upload
 const langSelect = document.getElementById("langSelect");
-const siteTitle = document.getElementById("siteTitle");
 const aiTitle = document.getElementById("aiTitle");
 const aiHint = document.getElementById("aiHint");
 const uploadLabel = document.getElementById("uploadLabel");
@@ -18,7 +32,9 @@ const pdfInput = document.getElementById("pdfInput");
 const pdfStatus = document.getElementById("pdfStatus");
 const aiBtn = document.getElementById("aiBtn");
 const aiOutput = document.getElementById("aiOutput");
+const aiBox = document.getElementById("aiBox");
 
+// Footer & Basis Elements (Imported for Translation)
 const basisTitle = document.getElementById("basisTitle");
 const basisH1 = document.getElementById("basisH1");
 const basisL1_1 = document.getElementById("basisL1_1");
@@ -36,39 +52,54 @@ const basisH4 = document.getElementById("basisH4");
 const basisL4_1 = document.getElementById("basisL4_1");
 const basisL4_2 = document.getElementById("basisL4_2");
 const basisL4_3 = document.getElementById("basisL4_3");
+
 const footerCredit = document.getElementById("footerCredit");
 const footerPortfolio = document.getElementById("footerPortfolio");
 const footerDev = document.getElementById("footerDev");
-
 const refBtn = document.getElementById("refBtn");
 const refModal = document.getElementById("refModal");
 const closeRef = document.getElementById("closeRef");
 const refTitle = document.getElementById("refTitle");
 
+// State
 let idx = -1;
-const answers = {};
+let answers = {};
 let pdfText = "";
+let timerInterval = null;
+let timeLeft = 25 * 60; // 25 minutes
+let timerRunning = false;
 
 const githubURL = "https://github.com/samisamkari27-cpu";
 
 const UI = {
   en: {
     siteTitle: "Find your study style",
-    assessment: "Assessment",
-    step: (a,b) => `Step ${a} of ${b}`,
-    completed: "Completed",
     ready: "Ready?",
     readyText: "Answer a short assessment and get a study plan.",
     yourResult: "Your result",
+    step: (a,b) => `Step ${a} of ${b}`,
+    completed: "Completed",
+    start: "Start",
+    next: "Next",
+    back: "Back",
+    restart: "Restart",
+    saveImg: "📸 Save Image",
+    share: "🔗 Share Result",
+    shareCopied: "Copied!",
+    
+    // Result Labels (Fixed)
     goal: "Goal",
     time: "Time",
     difficulty: "Difficulty",
     approach: "Approach",
     plan: "Plan",
-    start: "Start",
-    next: "Next",
-    back: "Back",
-    restart: "Restart",
+
+    // Timer
+    startTimer: "Start Focus",
+    pauseTimer: "Pause",
+    resetTimer: "Reset",
+    
+    // AI
     aiTitle: "AI (Not available for now)",
     aiHint: "Upload your slides PDF to tailor the plan to your course content.",
     uploadSlides: "Upload slides (PDF)",
@@ -77,7 +108,9 @@ const UI = {
     failed: "Failed to read PDF",
     gen: "Generate AI Plan",
     generating: "Generating…",
-    aiNotConnected: "AI not connected (missing /api/plan). The assessment still works.",
+    aiNotConnected: "AI not connected (missing /api/plan).",
+
+    // Basis & Footer
     basisTitle: "How the style is chosen (criteria)",
     basisH1: "1) Goal (what the exam rewards)",
     basisL1_1: "<b>Memorization</b>: prioritize retrieval practice + spaced review.",
@@ -100,31 +133,43 @@ const UI = {
     footerDev: "This site is under testing and development",
     footerRef: "References",
     refTitle: "References",
-    // New Text Keys
+
+    // Results logic text
     survivalTitle: "⚠️ Survival Mode (Emergency)",
     survivalText: "You have limited time and a lot of material. <b>Stop reading the textbook.</b> Focus ONLY on past exams and high-yield summary definitions.",
     tipTitle: "💡 Focus Tip",
-    tipPhone: "Your main enemy is the phone. Use the <b>Pomodoro technique</b> (25m work / 5m break) and put the phone in another room.",
-    tipBoredom: "Boredom means you are too passive. Stop reading. <b>Start solving</b> or explaining out loud to stay engaged.",
+    tipPhone: "Your main enemy is the phone. Use the <b>Pomodoro technique</b> (25m work / 5m break) below.",
+    tipBoredom: "Boredom means you are too passive. Stop reading. <b>Start solving</b> or explaining out loud.",
     tipAnxiety: "Anxiety is paralyzing. Start with the <b>easiest chapter</b> for 15 minutes just to build momentum.",
   },
   ar: {
     siteTitle: "اكتشف أسلوب مذاكرتك",
-    assessment: "الاختبار",
-    step: (a,b) => `الخطوة ${a} من ${b}`,
-    completed: "اكتمل",
     ready: "جاهز؟",
     readyText: "جاوب على اختبار سريع وتطلع لك خطة مذاكرة.",
     yourResult: "النتيجة",
+    step: (a,b) => `الخطوة ${a} من ${b}`,
+    completed: "اكتمل",
+    start: "ابدأ",
+    next: "التالي",
+    back: "السابق",
+    restart: "إعادة",
+    saveImg: "📸 حفظ الخطة",
+    share: "🔗 مشاركة النتيجة",
+    shareCopied: "تم النسخ!",
+
+    // Result Labels (Fixed)
     goal: "الهدف",
     time: "الوقت",
     difficulty: "الصعوبة",
     approach: "الأسلوب",
     plan: "الخطة",
-    start: "ابدأ",
-    next: "التالي",
-    back: "السابق",
-    restart: "إعادة",
+
+    // Timer
+    startTimer: "ابدأ التركيز",
+    pauseTimer: "إيقاف مؤقت",
+    resetTimer: "إعادة",
+
+    // AI
     aiTitle: "ذكاء اصطناعي (غير متاح حاليا)",
     aiHint: "ارفع PDF السلايدات عشان يخصص الخطة على محتوى مادتك.",
     uploadSlides: "رفع السلايدات (PDF)",
@@ -133,13 +178,15 @@ const UI = {
     failed: "فشل قراءة الملف",
     gen: "توليد خطة بالذكاء الاصطناعي",
     generating: "جاري التوليد…",
-    aiNotConnected: "الذكاء الاصطناعي غير متصل (ما فيه /api/plan). الاختبار شغال طبيعي.",
-    basisTitle: "كيف يتم اختيار الأسلوب (المعايير)",
+    aiNotConnected: "الذكاء الاصطناعي غير متصل.",
+
+    // Basis & Footer
+    basisTitle: "معايير اختيار الاسلوب المناسب",
     basisH1: "١) الهدف (على ماذا يركز الاختبار)",
     basisL1_1: "<b>الحفظ</b>: الأولوية لاسترجاع المعلومات + مراجعة متباعدة.",
     basisL1_2: "<b>الفهم</b>: الأولوية للشرح الذاتي + أسئلة 'لماذا/كيف' + اختبارات استرجاع سريعة.",
     basisL1_3: "<b>التطبيق</b>: الأولوية للأمثلة المحلولة ← تكثيف التمارين ← سجل الأخطاء.",
-    basisH2: "٢) الوقت المتبقي (ما هو الواقعي)",
+    basisH2: "٢) الوقت المتبقي",
     basisL2_1: "<b>قصير</b>: قلل الكمية، ركز على المهم، اختبر نفسك بشكل متكرر.",
     basisL2_2: "<b>متوسط</b>: امزج بين التعلم والتثبيت، جلسات متباعدة.",
     basisL2_3: "<b>طويل</b>: ابنِ الأساسيات أولاً، ثم انتقل للتطبيق العملي.",
@@ -151,18 +198,20 @@ const UI = {
     basisL4_1: "الاختبار يحدد <b>الاستراتيجية</b>.",
     basisL4_2: "الذكاء الاصطناعي يقرأ السلايدات لتخصيص <b>المواضيع + الخطة اليومية</b>.",
     basisL4_3: "إذا لم يتصل الذكاء الاصطناعي، التطبيق يعمل بشكل طبيعي.",
+    
     footerCredit: "© برمجة سامي",
     footerPortfolio: `صُمم لمعرض أعمالي <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
     footerDev: "الموقع تحت التجربة والتطوير",
     footerRef: "المراجع",
     refTitle: "المراجع",
-    // New Text Keys
+
+    // Results logic text
     survivalTitle: "⚠️ وضع الطوارئ (الإنقاذ)",
     survivalText: "وقتك ضيق والمادة كثيرة. <b>لا تقرأ الكتاب</b>. ركز فقط على حل الاختبارات السابقة وملخصات المفاهيم الأكثر تكراراً.",
     tipTitle: "💡 نصيحة للتركيز",
-    tipPhone: "عدوك الأول هو الجوال. استخدم <b>تقنية بومودورو</b> (25 دقيقة عمل / 5 راحة) وضع الجوال في غرفة أخرى.",
-    tipBoredom: "الملل يعني أن طريقتك سلبية. توقف عن القراءة فقط. <b>ابدأ بالحل</b> أو اشرح بصوت عالٍ لتنشيط مخك.",
-    tipAnxiety: "القلق يسبب الشلل. ابدأ بأسهل فصل لمدة 15 دقيقة فقط لكسر الحاجز وبناء الثقة.",
+    tipPhone: "عدوك الأول هو الجوال. استخدم <b>تقنية بومودورو</b> (25 دقيقة عمل / 5 راحة) بالأسفل.",
+    tipBoredom: "الملل يعني أن طريقتك سلبية. توقف عن القراءة فقط. <b>ابدأ بالحل</b> أو اشرح بصوت عالٍ.",
+    tipAnxiety: "القلق يسبب الشلل. ابدأ بأسهل فصل لمدة 15 دقيقة فقط لكسر الحاجز.",
   }
 };
 
@@ -196,7 +245,6 @@ const questions = [
       { label: { en: "I forget information", ar: "أنسى المعلومة" }, value: "memorization" },
       { label: { en: "I don’t fully understand the concept", ar: "ما أفهم المفهوم بالكامل" }, value: "understanding" },
       { label: { en: "I understand it but can’t apply it", ar: "أفهم لكن ما أقدر أطبق" }, value: "application" },
-      // New Option for Fluency
       { label: { en: "I run out of time", ar: "ما يكفيني الوقت" }, value: "time_issue" },
     ],
   },
@@ -341,7 +389,6 @@ const questions = [
       { label: { en: "Much harder", ar: "أصعب بكثير" }, value: 3 },
     ],
   },
-  // --- New Questions ---
   {
     id: "q17_coverage",
     title: { en: "Q17 — How much of the material have you covered?", ar: "س17 — كم غطيت من المنهج حتى الآن؟" },
@@ -366,15 +413,25 @@ const questions = [
   },
 ];
 
-function lang() {
-  return (langSelect && langSelect.value) ? langSelect.value : "en";
+// --- Initialization ---
+function lang() { return (langSelect && langSelect.value) ? langSelect.value : "en"; }
+function T(key) { return UI[lang()][key]; }
+function S(v) { if (typeof v === "string") return v; return v[lang()] || v.en; }
+
+function loadState() {
+  const saved = localStorage.getItem("studyCompassData");
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.answers) answers = data.answers;
+      if (typeof data.idx === "number") idx = data.idx;
+    } catch(e) { console.error("Could not load state", e); }
+  }
 }
-function T(key) {
-  return UI[lang()][key];
-}
-function S(v) {
-  if (typeof v === "string") return v;
-  return v[lang()] || v.en;
+
+function saveState() {
+  const data = { idx, answers };
+  localStorage.setItem("studyCompassData", JSON.stringify(data));
 }
 
 function setLangUI() {
@@ -382,22 +439,30 @@ function setLangUI() {
   document.documentElement.lang = l;
   document.body.dir = l === "ar" ? "rtl" : "ltr";
 
-  if (pill) pill.textContent = T("assessment");
-  startBtn.textContent = T("start");
-  nextBtn.textContent = T("next");
+  // Basic UI
+  if (startBtn) startBtn.textContent = T("start");
+  if (nextBtn) nextBtn.textContent = T("next");
   if (prevBtn) prevBtn.textContent = T("back");
-  restartBtn.textContent = T("restart");
+  if (restartBtn) restartBtn.textContent = T("restart");
+  if (saveImgBtn) saveImgBtn.textContent = T("saveImg");
+  if (shareBtn) shareBtn.textContent = T("share");
 
+  if (timerStartBtn) {
+    timerStartBtn.textContent = timerRunning ? T("pauseTimer") : T("startTimer");
+    timerResetBtn.textContent = T("resetTimer");
+  }
+
+  // AI & Upload
   if (aiTitle) aiTitle.textContent = T("aiTitle");
   if (aiHint) aiHint.textContent = T("aiHint");
-  if (uploadLabel) {
-    uploadLabel.childNodes[0].textContent = T("uploadSlides") + " ";
-  }
+  if (uploadLabel) uploadLabel.childNodes[0].textContent = T("uploadSlides") + " ";
   if (pdfStatus && !pdfText) pdfStatus.textContent = T("noFile");
 
   if (siteTitle) siteTitle.textContent = T("siteTitle");
 
+  // Basis translations
   if (basisTitle) basisTitle.textContent = T("basisTitle");
+  
   if (basisH1) basisH1.textContent = T("basisH1");
   if (basisL1_1) basisL1_1.innerHTML = T("basisL1_1");
   if (basisL1_2) basisL1_2.innerHTML = T("basisL1_2");
@@ -418,14 +483,18 @@ function setLangUI() {
   if (basisL4_2) basisL4_2.innerHTML = T("basisL4_2");
   if (basisL4_3) basisL4_3.innerHTML = T("basisL4_3");
 
+  // Footer & Refs
   if (footerCredit) footerCredit.textContent = T("footerCredit");
   if (footerPortfolio) footerPortfolio.innerHTML = T("footerPortfolio");
   if (footerDev) footerDev.textContent = T("footerDev");
   if (refBtn) refBtn.textContent = T("footerRef");
   if (refTitle) refTitle.textContent = T("refTitle");
 
+  // Logic to show correct screen based on idx
   if (idx === -1) {
     showStartScreen();
+  } else if (idx >= questions.length) {
+    computeResult();
   } else {
     renderQuestion();
   }
@@ -433,18 +502,38 @@ function setLangUI() {
 
 function showStartScreen() {
   qTitle.textContent = T("ready");
+  // Hide result elements
+  if(resultContainer) resultContainer.classList.add("hidden");
+  if(timerBox) timerBox.classList.add("hidden");
+  if(aiBox) aiBox.classList.remove("hidden");
+  
+  // Show question elements text
+  qText.classList.remove("hidden");
   qText.textContent = T("readyText");
+  choices.classList.remove("hidden");
+  choices.innerHTML = "";
+
   progressText.textContent = T("step")(0, questions.length);
   progressBar.style.width = "0%";
-  choices.innerHTML = "";
+  
   startBtn.classList.remove("hidden");
   nextBtn.disabled = true;
   nextBtn.classList.remove("hidden");
   if(prevBtn) prevBtn.classList.add("hidden");
   restartBtn.classList.add("hidden");
+  if(resultActions) resultActions.classList.add("hidden");
 }
 
 function renderQuestion() {
+  // Ensure result view is hidden
+  if(resultContainer) resultContainer.classList.add("hidden");
+  if(timerBox) timerBox.classList.add("hidden");
+  if(aiBox) aiBox.classList.remove("hidden");
+  if(resultActions) resultActions.classList.add("hidden");
+
+  qText.classList.remove("hidden");
+  choices.classList.remove("hidden");
+
   const q = questions[idx];
   qTitle.textContent = S(q.title);
   qText.textContent = S(q.text);
@@ -471,6 +560,7 @@ function renderQuestion() {
     }
     btn.onclick = () => {
       answers[q.id] = opt.value;
+      saveState(); 
       [...choices.children].forEach((b) => {
           b.style.borderColor = "";
           b.style.background = "";
@@ -485,21 +575,16 @@ function renderQuestion() {
 
 function computeGoal() {
   let mem = 0, und = 0, app = 0;
-  // Weighted Questions (x2 importance)
   const highImpact = ["q1_exam_format", "q6_skill_tested"];
-
   ["q1_exam_format","q2_high_grade","q3_fail_reason","q4_hardest_to_do","q5_material_type","q6_skill_tested"]
     .forEach((id) => {
       const v = answers[id];
-      const weight = highImpact.includes(id) ? 2 : 1; // Double weight for key questions
-
+      const weight = highImpact.includes(id) ? 2 : 1;
       if (v === "memorization") mem += 2 * weight;
       else if (v === "understanding") und += 2 * weight;
       else if (v === "application") app += 2 * weight;
       else if (v === "mixed") { mem += weight; und += weight; app += weight; }
-      // "time_issue" from Q3 is ignored here, handled in buildPlan
     });
-
   if (mem >= und && mem >= app) return "memorization";
   if (und >= mem && und >= app) return "understanding";
   return "application";
@@ -510,12 +595,10 @@ function computeTime() {
   const day = answers.q8_days_per_week;
   const sess = answers.q9_session_length;
   const started = answers.q10_started;
-
   const basePts = base === "short" ? 0 : base === "medium" ? 2 : 4;
   const dayPts = day === "low" ? 0 : day === "mid" ? 1 : day === "high" ? 2 : 3;
   const sessPts = sess === "s0" ? 0 : sess === "s1" ? 1 : sess === "s2" ? 2 : 3;
   const prepPts = started === "p0" || started === "p1" ? 0 : started === "p2" ? 1 : 2;
-
   const total = basePts + Math.floor((dayPts + sessPts) / 2) + prepPts;
   if (total <= 2) return "short";
   if (total <= 6) return "medium";
@@ -535,7 +618,6 @@ function buildPlan(goal, time, difficulty) {
   let approach = "";
   let plan = "";
 
-  // 1. Core Logic
   if (goal === "memorization") {
     approach = lang()==="ar" ? "حفظ مع استرجاع (اختبار نفسك)" : "Retrieval-based memorization";
     plan = time === "short"
@@ -553,7 +635,6 @@ function buildPlan(goal, time, difficulty) {
       : (lang()==="ar" ? "أمثلة محلولة ثم حل كثير مع زيادة الصعوبة." : "Worked examples followed by many problems.");
   }
 
-  // 2. Fluency Check (If user said "I run out of time" in Q3)
   if (answers["q3_fail_reason"] === "time_issue") {
     const fluencyText = lang() === "ar" 
       ? "مشكلتك ليست في المعلومات بل في السرعة. تدرب على حل أسئلة بوجود مؤقت (Timer) لتعويد عقلك على السرعة."
@@ -561,16 +642,13 @@ function buildPlan(goal, time, difficulty) {
     plan += `<br><br>⏱ <b>${fluencyText}</b>`;
   }
 
-  // 3. Survival Mode (If coverage < 50% and Time is short)
   const coverage = answers["q17_coverage"];
   if ((coverage === "very_low" || coverage === "low") && time === "short") {
      const stitle = T("survivalTitle");
      const stext = T("survivalText");
-     // Override the plan with survival mode or append it strongly
      plan = `<div class='plan-block plan-warning'><b>${stitle}</b><br>${stext}</div>` + plan;
   }
 
-  // 4. Distraction Tips
   const distraction = answers["q18_distraction"];
   let tip = "";
   if (distraction === "phone") tip = T("tipPhone");
@@ -585,27 +663,39 @@ function buildPlan(goal, time, difficulty) {
 }
 
 function computeResult() {
+  saveState(); 
   const goal = computeGoal();
   const time = computeTime();
   const difficulty = computeDifficulty();
   const { approach, plan } = buildPlan(goal, time, difficulty);
 
+  // Switch View
+  qText.classList.add("hidden");
+  choices.classList.add("hidden");
+  aiBox.classList.add("hidden");
+  
+  resultContainer.classList.remove("hidden");
+  timerBox.classList.remove("hidden");
+  
   qTitle.textContent = T("yourResult");
-  qText.innerHTML = `
+  qTextResult.innerHTML = `
     <b>${T("goal")}:</b> ${goal}<br/>
     <b>${T("time")}:</b> ${time}<br/>
     <b>${T("difficulty")}:</b> ${difficulty}<br/><br/>
     <b>${T("approach")}:</b> ${approach}<br/><br/>
     <div style="margin-top:10px">${plan}</div>
   `;
-  choices.innerHTML = "";
+
   progressText.textContent = T("completed");
   progressBar.style.width = "100%";
   
   nextBtn.classList.add("hidden");
   restartBtn.classList.remove("hidden");
-  if(prevBtn) prevBtn.classList.remove("hidden");
+  if(prevBtn) prevBtn.classList.add("hidden"); 
+  if(resultActions) resultActions.classList.remove("hidden");
 }
+
+// --- Event Handlers ---
 
 startBtn.onclick = () => {
   idx = 0;
@@ -617,6 +707,7 @@ nextBtn.onclick = () => {
     idx++;
     renderQuestion();
   } else {
+    idx++; 
     computeResult();
   }
 };
@@ -624,6 +715,7 @@ nextBtn.onclick = () => {
 if (prevBtn) {
   prevBtn.onclick = () => {
     if (!restartBtn.classList.contains("hidden")) {
+      idx = questions.length - 1; 
       renderQuestion();
       return;
     }
@@ -639,7 +731,13 @@ if (prevBtn) {
 
 restartBtn.onclick = () => {
   idx = -1;
-  Object.keys(answers).forEach((k) => delete answers[k]);
+  answers = {};
+  localStorage.removeItem("studyCompassData");
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timeLeft = 25 * 60;
+  updateTimerDisplay();
+  if (timerStartBtn) timerStartBtn.textContent = T("startTimer");
   showStartScreen();
 };
 
@@ -651,70 +749,83 @@ if (refBtn && refModal && closeRef) {
   };
 }
 
-async function extractPdfText(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  let text = "";
-  const maxPages = Math.min(pdf.numPages, 12);
-  for (let p = 1; p <= maxPages; p++) {
-    const page = await pdf.getPage(p);
-    const content = await page.getTextContent();
-    const strings = content.items.map((it) => it.str);
-    text += `\n\n--- Page ${p} ---\n` + strings.join(" ");
-  }
-  return text.slice(0, 18000);
+// --- Timer Logic ---
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  if(timerDisplay) timerDisplay.textContent = `${m}:${s < 10 ? '0'+s : s}`;
 }
 
-if (pdfInput && pdfStatus && aiBtn && aiOutput) {
-  pdfInput.addEventListener("change", async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    pdfStatus.textContent = T("reading");
-    aiBtn.disabled = true;
-    aiOutput.classList.add("hidden");
-    aiOutput.textContent = "";
-    try {
-      pdfText = await extractPdfText(file);
-      pdfStatus.textContent = file.name;
-      aiBtn.disabled = false;
-    } catch {
-      pdfStatus.textContent = T("failed");
-      aiBtn.disabled = true;
+if (timerStartBtn && timerResetBtn) {
+  timerStartBtn.onclick = () => {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerStartBtn.textContent = T("startTimer");
+    } else {
+      timerRunning = true;
+      timerStartBtn.textContent = T("pauseTimer");
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          timerStartBtn.textContent = T("startTimer");
+          alert("Time's up! Take a break.");
+        }
+      }, 1000);
     }
-  });
+  };
 
-  aiBtn.addEventListener("click", async () => {
-    aiBtn.disabled = true;
-    aiOutput.classList.remove("hidden");
-    aiOutput.textContent = T("generating");
-    try {
-      const payload = {
-        goal: computeGoal(),
-        time: computeTime(),
-        difficulty: computeDifficulty(),
-        materialText: pdfText,
-        locale: lang(),
-      };
-      const res = await fetch("/api/plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
-      const data = await res.json();
-      aiOutput.textContent = data.output || "No output";
-    } catch {
-      aiOutput.textContent = T("aiNotConnected");
-    } finally {
-      aiBtn.disabled = false;
-    }
-  });
+  timerResetBtn.onclick = () => {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timeLeft = 25 * 60;
+    updateTimerDisplay();
+    timerStartBtn.textContent = T("startTimer");
+  };
 }
 
+// --- Save Image Logic ---
+if (saveImgBtn) {
+  saveImgBtn.onclick = () => {
+    const card = document.getElementById("mainCard");
+    html2canvas(card, {
+      backgroundColor: "#1e293b",
+      scale: 2
+    }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "My_Study_Plan.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    }).catch(err => console.error("Screenshot failed", err));
+  };
+}
+
+// --- Share Logic ---
+if (shareBtn) {
+  shareBtn.onclick = () => {
+    const goal = computeGoal();
+    const txt = `StudyCompass Result:\nGoal: ${goal}\nCheck it out at: ${window.location.href}`;
+    navigator.clipboard.writeText(txt).then(() => {
+      const originalText = shareBtn.textContent;
+      shareBtn.textContent = T("shareCopied");
+      setTimeout(() => {
+        shareBtn.textContent = originalText;
+      }, 2000);
+    }).catch(() => {
+      alert("Could not copy to clipboard.");
+    });
+  };
+}
+
+// --- Language ---
 if (langSelect) {
   langSelect.addEventListener("change", setLangUI);
 }
 
+// Load logic
+loadState();
 setLangUI();
