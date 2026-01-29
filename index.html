@@ -13,7 +13,7 @@
 
   <main class="container">
     <header class="header">
-      <h1 class="title">StudyCompass</h1>
+      <h1 class="title" id="siteTitle">Find your study style</h1>
 
       <div class="headerRight">
         <select id="langSelect" class="langSelect" aria-label="Language">
@@ -26,7 +26,6 @@
     <section class="card" aria-live="polite">
       <div class="cardTop">
         <div class="meta">
-          <span id="pill" class="pill">Assessment</span>
           <span id="progressText" class="progressText">Step 0 of 16</span>
         </div>
 
@@ -48,7 +47,7 @@
 
       <div class="aiBox">
         <div class="aiTop">
-          <div class="aiTitle" id="aiTitle">AI (optional)</div>
+          <div class="aiTitle" id="aiTitle">AI (not available for now)</div>
           <div class="aiHint" id="aiHint">Upload your slides PDF to tailor the plan to your course content.</div>
         </div>
 
@@ -68,40 +67,41 @@
 
     <section class="footerCard">
       <h3 class="footerTitle" id="basisTitle">How the style is chosen (criteria)</h3>
+
       <div class="basisGrid">
         <div class="basisBlock">
           <div class="basisHead" id="basisH1">1) Goal (what the exam rewards)</div>
           <ul class="basisList" id="basisL1">
-            <li><b>Memorization</b>: prioritize retrieval practice + spaced review.</li>
-            <li><b>Understanding</b>: prioritize self-explanation + “why/how” prompts + quick recall checks.</li>
-            <li><b>Application</b>: prioritize worked examples → lots of practice → error log.</li>
+            <li id="basisL1_1"><b>Memorization</b>: prioritize retrieval practice + spaced review.</li>
+            <li id="basisL1_2"><b>Understanding</b>: prioritize self-explanation + “why/how” prompts + quick recall checks.</li>
+            <li id="basisL1_3"><b>Application</b>: prioritize worked examples → lots of practice → error log.</li>
           </ul>
         </div>
 
         <div class="basisBlock">
           <div class="basisHead" id="basisH2">2) Time-to-exam (what’s realistic)</div>
           <ul class="basisList" id="basisL2">
-            <li><b>Short</b>: cut scope, drill high-yield, test yourself frequently.</li>
-            <li><b>Medium</b>: mix learning + consolidation, spaced sessions.</li>
-            <li><b>Long</b>: build foundations first, then transfer practice.</li>
+            <li id="basisL2_1"><b>Short</b>: cut scope, drill high-yield, test yourself frequently.</li>
+            <li id="basisL2_2"><b>Medium</b>: mix learning + consolidation, spaced sessions.</li>
+            <li id="basisL2_3"><b>Long</b>: build foundations first, then transfer practice.</li>
           </ul>
         </div>
 
         <div class="basisBlock">
           <div class="basisHead" id="basisH3">3) Difficulty (how hard it is for you)</div>
           <ul class="basisList" id="basisL3">
-            <li><b>Easy</b>: push to higher-level testing faster.</li>
-            <li><b>Medium</b>: alternate learn → test → fix gaps.</li>
-            <li><b>Hard</b>: start core concepts, reduce materials, track mistakes.</li>
+            <li id="basisL3_1"><b>Easy</b>: push to higher-level testing faster.</li>
+            <li id="basisL3_2"><b>Medium</b>: alternate learn → test → fix gaps.</li>
+            <li id="basisL3_3"><b>Hard</b>: start core concepts, reduce materials, track mistakes.</li>
           </ul>
         </div>
 
         <div class="basisBlock">
-          <div class="basisHead" id="basisH4">AI role (Not available for now)</div>
+          <div class="basisHead" id="basisH4">AI role (not available for now)</div>
           <ul class="basisList" id="basisL4">
-            <li>Assessment chooses the <b>strategy</b>.</li>
-            <li>AI reads your slides to tailor the <b>topics + daily plan</b>.</li>
-            <li>If AI isn’t connected, the app still works normally.</li>
+            <li id="basisL4_1">Assessment chooses the <b>strategy</b>.</li>
+            <li id="basisL4_2">AI reads your slides to tailor the <b>topics + daily plan</b>.</li>
+            <li id="basisL4_3">If AI isn’t connected, the app still works normally.</li>
           </ul>
         </div>
       </div>
@@ -111,6 +111,8 @@
       <span>© Made by Sami</span>
       <span class="dot">•</span>
       <span>Built for My GitHub portfolio</span>
+      <span class="dot">•</span>
+      <span>This site is under testing and development</span>
     </footer>
   </main>
 
@@ -118,4 +120,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
