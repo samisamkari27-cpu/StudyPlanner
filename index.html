@@ -1,122 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StudyCompass</title>
-  <meta name="description" content="StudyCompass helps students choose an evidence-based study approach based on learning goal, time-to-exam, and difficulty." />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="bg"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🧭</span>
+      <span class="name">StudyCompass</span>
+    </div>
+
+    <div class="controls">
+      <select id="langSelect">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+  </header>
 
   <main class="container">
-    <header class="header">
-      <h1 class="title">StudyCompass</h1>
 
-      <div class="headerRight">
-        <select id="langSelect" class="langSelect" aria-label="Language">
-          <option value="en">English</option>
-          <option value="ar">العربية</option>
-        </select>
-      </div>
-    </header>
-
-    <section class="card" aria-live="polite">
-      <div class="cardTop">
-        <div class="meta">
-          <span id="pill" class="pill">Assessment</span>
-          <span id="progressText" class="progressText">Step 0 of 16</span>
-        </div>
-
-        <div class="progressWrap" aria-hidden="true">
-          <div id="progressBar" class="progressBar"></div>
-        </div>
+    <div class="card assessment-card">
+      <div class="card-header">
+        <span id="pill" class="pill">Assessment</span>
+        <span id="progressText" class="progress-text"></span>
       </div>
 
-      <h2 id="qTitle" class="qTitle">Ready?</h2>
-      <p id="qText" class="qText">Answer a short assessment and get a study plan.</p>
+      <div class="progress">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <h2 id="qTitle">Ready?</h2>
+      <p id="qText">Answer a short assessment and get a study plan.</p>
 
       <div id="choices" class="choices"></div>
 
       <div class="actions">
-        <button id="startBtn" class="btn primary">Start</button>
-        <button id="nextBtn" class="btn" disabled>Next</button>
-        <button id="restartBtn" class="btn ghost hidden">Restart</button>
+        <button id="startBtn" class="primary">Start</button>
+        <button id="nextBtn" class="primary" disabled>Next</button>
+        <button id="restartBtn" class="secondary hidden">Restart</button>
       </div>
+    </div>
 
-      <div class="aiBox">
-        <div class="aiTop">
-          <div class="aiTitle" id="aiTitle">AI (optional)</div>
-          <div class="aiHint" id="aiHint">Upload your slides PDF to tailor the plan to your course content.</div>
-        </div>
+    <div class="card ai-card">
+      <h3 id="aiTitle">AI (optional)</h3>
+      <p id="aiHint">
+        Upload your slides PDF to tailor the plan to your course content.
+      </p>
 
-        <label class="uploadLabel" id="uploadLabel">
-          Upload slides (PDF)
-          <input id="pdfInput" type="file" accept="application/pdf" />
-        </label>
+      <label id="uploadLabel" class="upload">
+        Upload slides (PDF)
+        <input id="pdfInput" type="file" accept="application/pdf" hidden />
+      </label>
 
-        <div class="uploadMeta">
-          <span id="pdfStatus">No file uploaded</span>
-          <button id="aiBtn" class="btn primary" disabled>Generate AI Plan</button>
-        </div>
+      <div id="pdfStatus" class="file-status">No file uploaded</div>
 
-        <pre id="aiOutput" class="aiOutput hidden"></pre>
-      </div>
-    </section>
+      <button id="aiBtn" class="primary" disabled>
+        Generate AI Plan
+      </button>
 
-    <section class="footerCard">
-      <h3 class="footerTitle" id="basisTitle">How the style is chosen (criteria)</h3>
-      <div class="basisGrid">
-        <div class="basisBlock">
-          <div class="basisHead" id="basisH1">1) Goal (what the exam rewards)</div>
-          <ul class="basisList" id="basisL1">
-            <li><b>Memorization</b>: prioritize retrieval practice + spaced review.</li>
-            <li><b>Understanding</b>: prioritize self-explanation + “why/how” prompts + quick recall checks.</li>
-            <li><b>Application</b>: prioritize worked examples → lots of practice → error log.</li>
-          </ul>
-        </div>
-
-        <div class="basisBlock">
-          <div class="basisHead" id="basisH2">2) Time-to-exam (what’s realistic)</div>
-          <ul class="basisList" id="basisL2">
-            <li><b>Short</b>: cut scope, drill high-yield, test yourself frequently.</li>
-            <li><b>Medium</b>: mix learning + consolidation, spaced sessions.</li>
-            <li><b>Long</b>: build foundations first, then transfer practice.</li>
-          </ul>
-        </div>
-
-        <div class="basisBlock">
-          <div class="basisHead" id="basisH3">3) Difficulty (how hard it is for you)</div>
-          <ul class="basisList" id="basisL3">
-            <li><b>Easy</b>: push to higher-level testing faster.</li>
-            <li><b>Medium</b>: alternate learn → test → fix gaps.</li>
-            <li><b>Hard</b>: start core concepts, reduce materials, track mistakes.</li>
-          </ul>
-        </div>
-
-        <div class="basisBlock">
-          <div class="basisHead" id="basisH4">AI role (optional)</div>
-          <ul class="basisList" id="basisL4">
-            <li>Assessment chooses the <b>strategy</b>.</li>
-            <li>AI reads your slides to tailor the <b>topics + daily plan</b>.</li>
-            <li>If AI isn’t connected, the app still works normally.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      <div id="aiOutput" class="ai-output hidden"></div>
+    </div>
 
     <footer class="footer">
       <span>© StudyCompass</span>
       <span class="dot">•</span>
       <span>Built for GitHub portfolio</span>
     </footer>
+
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
-  <script src="app.js"></script>
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- App -->
+  <script src="app.js"></script>
+
 </body>
 </html>
-
