@@ -100,6 +100,13 @@ const UI = {
     footerDev: "This site is under testing and development",
     footerRef: "References",
     refTitle: "References",
+    // New Text Keys
+    survivalTitle: "⚠️ Survival Mode (Emergency)",
+    survivalText: "You have limited time and a lot of material. <b>Stop reading the textbook.</b> Focus ONLY on past exams and high-yield summary definitions.",
+    tipTitle: "💡 Focus Tip",
+    tipPhone: "Your main enemy is the phone. Use the <b>Pomodoro technique</b> (25m work / 5m break) and put the phone in another room.",
+    tipBoredom: "Boredom means you are too passive. Stop reading. <b>Start solving</b> or explaining out loud to stay engaged.",
+    tipAnxiety: "Anxiety is paralyzing. Start with the <b>easiest chapter</b> for 15 minutes just to build momentum.",
   },
   ar: {
     siteTitle: "اكتشف أسلوب مذاكرتك",
@@ -118,10 +125,10 @@ const UI = {
     next: "التالي",
     back: "السابق",
     restart: "إعادة",
-    aiTitle: "الذكاء الاصطناعي (غير متاح حاليا)",
-    aiHint: "ارفع السلايدات هنا عشان يكتشف الاسلوب الانسب بناءا على محتوى مادتك.",
+    aiTitle: "ذكاء اصطناعي (غير متاح حاليا)",
+    aiHint: "ارفع PDF السلايدات عشان يخصص الخطة على محتوى مادتك.",
     uploadSlides: "رفع السلايدات (PDF)",
-    noFile: "لا يوجد ملف لحد الآن",
+    noFile: "ما تم رفع ملف",
     reading: "جاري قراءة الملف…",
     failed: "فشل قراءة الملف",
     gen: "توليد خطة بالذكاء الاصطناعي",
@@ -145,10 +152,17 @@ const UI = {
     basisL4_2: "الذكاء الاصطناعي يقرأ السلايدات لتخصيص <b>المواضيع + الخطة اليومية</b>.",
     basisL4_3: "إذا لم يتصل الذكاء الاصطناعي، التطبيق يعمل بشكل طبيعي.",
     footerCredit: "© برمجة سامي",
-    footerPortfolio: `مجرد عمل بسيط لصفحتي على <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
-    footerDev: "الموقع تحت التجربة",
+    footerPortfolio: `صُمم لمعرض أعمالي <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
+    footerDev: "الموقع تحت التجربة والتطوير",
     footerRef: "المراجع",
     refTitle: "المراجع",
+    // New Text Keys
+    survivalTitle: "⚠️ وضع الطوارئ (الإنقاذ)",
+    survivalText: "وقتك ضيق والمادة كثيرة. <b>لا تقرأ الكتاب</b>. ركز فقط على حل الاختبارات السابقة وملخصات المفاهيم الأكثر تكراراً.",
+    tipTitle: "💡 نصيحة للتركيز",
+    tipPhone: "عدوك الأول هو الجوال. استخدم <b>تقنية بومودورو</b> (25 دقيقة عمل / 5 راحة) وضع الجوال في غرفة أخرى.",
+    tipBoredom: "الملل يعني أن طريقتك سلبية. توقف عن القراءة فقط. <b>ابدأ بالحل</b> أو اشرح بصوت عالٍ لتنشيط مخك.",
+    tipAnxiety: "القلق يسبب الشلل. ابدأ بأسهل فصل لمدة 15 دقيقة فقط لكسر الحاجز وبناء الثقة.",
   }
 };
 
@@ -182,6 +196,8 @@ const questions = [
       { label: { en: "I forget information", ar: "أنسى المعلومة" }, value: "memorization" },
       { label: { en: "I don’t fully understand the concept", ar: "ما أفهم المفهوم بالكامل" }, value: "understanding" },
       { label: { en: "I understand it but can’t apply it", ar: "أفهم لكن ما أقدر أطبق" }, value: "application" },
+      // New Option for Fluency
+      { label: { en: "I run out of time", ar: "ما يكفيني الوقت" }, value: "time_issue" },
     ],
   },
   {
@@ -325,6 +341,29 @@ const questions = [
       { label: { en: "Much harder", ar: "أصعب بكثير" }, value: 3 },
     ],
   },
+  // --- New Questions ---
+  {
+    id: "q17_coverage",
+    title: { en: "Q17 — How much of the material have you covered?", ar: "س17 — كم غطيت من المنهج حتى الآن؟" },
+    text: { en: "Be honest.", ar: "كن صريح." },
+    options: [
+      { label: { en: "Less than 20% (Panic mode)", ar: "أقل من 20% (وضع خطر)" }, value: "very_low" },
+      { label: { en: "Around 50%", ar: "حوالي 50%" }, value: "low" },
+      { label: { en: "Most of it (> 80%)", ar: "أغلبه (أكثر من 80%)" }, value: "high" },
+      { label: { en: "All of it", ar: "خلصته كامل" }, value: "full" },
+    ],
+  },
+  {
+    id: "q18_distraction",
+    title: { en: "Q18 — What is your biggest study challenge?", ar: "س18 — إيش أكبر مشكلة تواجهك بالمذاكرة؟" },
+    text: { en: "Pick one.", ar: "اختر واحد." },
+    options: [
+      { label: { en: "Phone & Distractions", ar: "الجوال والتشتت" }, value: "phone" },
+      { label: { en: "Boredom / Sleepiness", ar: "الملل والنعاس" }, value: "boredom" },
+      { label: { en: "Anxiety & Stress", ar: "القلق والتوتر" }, value: "anxiety" },
+      { label: { en: "None", ar: "ما عندي مشكلة" }, value: "none" },
+    ],
+  },
 ];
 
 function lang() {
@@ -392,20 +431,15 @@ function setLangUI() {
   }
 }
 
-// Helper to show start screen and hide others
 function showStartScreen() {
   qTitle.textContent = T("ready");
   qText.textContent = T("readyText");
   progressText.textContent = T("step")(0, questions.length);
   progressBar.style.width = "0%";
-  
   choices.innerHTML = "";
-  
   startBtn.classList.remove("hidden");
   nextBtn.disabled = true;
   nextBtn.classList.remove("hidden");
-  
-  // Hide Back and Restart on start screen
   if(prevBtn) prevBtn.classList.add("hidden");
   restartBtn.classList.add("hidden");
 }
@@ -416,13 +450,11 @@ function renderQuestion() {
   qText.textContent = S(q.text);
   choices.innerHTML = "";
   
-  // Manage buttons visibility
   startBtn.classList.add("hidden");
   restartBtn.classList.add("hidden");
   if(prevBtn) prevBtn.classList.remove("hidden");
   nextBtn.classList.remove("hidden");
 
-  // Determine if next should be enabled (if answer exists)
   const hasAnswer = answers[q.id] !== undefined;
   nextBtn.disabled = !hasAnswer;
 
@@ -433,25 +465,18 @@ function renderQuestion() {
     const btn = document.createElement("button");
     btn.className = "choiceBtn";
     btn.textContent = S(opt.label);
-    
-    // Highlight if previously selected
     if (answers[q.id] === opt.value) {
        btn.style.borderColor = "#4b6bff";
        btn.style.background = "rgba(99, 102, 241, 0.15)";
     }
-
     btn.onclick = () => {
       answers[q.id] = opt.value;
-      
-      // Reset styles for all siblings
       [...choices.children].forEach((b) => {
           b.style.borderColor = "";
           b.style.background = "";
       });
-      // Set style for clicked
       btn.style.borderColor = "#4b6bff";
       btn.style.background = "rgba(99, 102, 241, 0.15)";
-      
       nextBtn.disabled = false;
     };
     choices.appendChild(btn);
@@ -460,14 +485,21 @@ function renderQuestion() {
 
 function computeGoal() {
   let mem = 0, und = 0, app = 0;
+  // Weighted Questions (x2 importance)
+  const highImpact = ["q1_exam_format", "q6_skill_tested"];
+
   ["q1_exam_format","q2_high_grade","q3_fail_reason","q4_hardest_to_do","q5_material_type","q6_skill_tested"]
     .forEach((id) => {
       const v = answers[id];
-      if (v === "memorization") mem += 2;
-      else if (v === "understanding") und += 2;
-      else if (v === "application") app += 2;
-      else if (v === "mixed") { mem++; und++; app++; }
+      const weight = highImpact.includes(id) ? 2 : 1; // Double weight for key questions
+
+      if (v === "memorization") mem += 2 * weight;
+      else if (v === "understanding") und += 2 * weight;
+      else if (v === "application") app += 2 * weight;
+      else if (v === "mixed") { mem += weight; und += weight; app += weight; }
+      // "time_issue" from Q3 is ignored here, handled in buildPlan
     });
+
   if (mem >= und && mem >= app) return "memorization";
   if (und >= mem && und >= app) return "understanding";
   return "application";
@@ -503,6 +535,7 @@ function buildPlan(goal, time, difficulty) {
   let approach = "";
   let plan = "";
 
+  // 1. Core Logic
   if (goal === "memorization") {
     approach = lang()==="ar" ? "حفظ مع استرجاع (اختبار نفسك)" : "Retrieval-based memorization";
     plan = time === "short"
@@ -520,10 +553,32 @@ function buildPlan(goal, time, difficulty) {
       : (lang()==="ar" ? "أمثلة محلولة ثم حل كثير مع زيادة الصعوبة." : "Worked examples followed by many problems.");
   }
 
-  if (difficulty === "hard") {
-    plan += lang()==="ar"
-      ? " ركّز على نقاط ضعفك فقط وسجّل أخطاءك."
-      : " Focus on weak areas only and track mistakes.";
+  // 2. Fluency Check (If user said "I run out of time" in Q3)
+  if (answers["q3_fail_reason"] === "time_issue") {
+    const fluencyText = lang() === "ar" 
+      ? "مشكلتك ليست في المعلومات بل في السرعة. تدرب على حل أسئلة بوجود مؤقت (Timer) لتعويد عقلك على السرعة."
+      : "Your issue is fluency, not just knowledge. Practice solving questions under a strict timer.";
+    plan += `<br><br>⏱ <b>${fluencyText}</b>`;
+  }
+
+  // 3. Survival Mode (If coverage < 50% and Time is short)
+  const coverage = answers["q17_coverage"];
+  if ((coverage === "very_low" || coverage === "low") && time === "short") {
+     const stitle = T("survivalTitle");
+     const stext = T("survivalText");
+     // Override the plan with survival mode or append it strongly
+     plan = `<div class='plan-block plan-warning'><b>${stitle}</b><br>${stext}</div>` + plan;
+  }
+
+  // 4. Distraction Tips
+  const distraction = answers["q18_distraction"];
+  let tip = "";
+  if (distraction === "phone") tip = T("tipPhone");
+  else if (distraction === "boredom") tip = T("tipBoredom");
+  else if (distraction === "anxiety") tip = T("tipAnxiety");
+
+  if (tip) {
+    plan += `<br><br><div class='plan-block plan-tip'><b>${T("tipTitle")}</b><br>${tip}</div>`;
   }
 
   return { approach, plan };
@@ -541,13 +596,12 @@ function computeResult() {
     <b>${T("time")}:</b> ${time}<br/>
     <b>${T("difficulty")}:</b> ${difficulty}<br/><br/>
     <b>${T("approach")}:</b> ${approach}<br/><br/>
-    <b>${T("plan")}:</b> ${plan}
+    <div style="margin-top:10px">${plan}</div>
   `;
   choices.innerHTML = "";
   progressText.textContent = T("completed");
   progressBar.style.width = "100%";
   
-  // Hide Next, Show Restart & Back (Back allows going back to Q16)
   nextBtn.classList.add("hidden");
   restartBtn.classList.remove("hidden");
   if(prevBtn) prevBtn.classList.remove("hidden");
@@ -567,23 +621,16 @@ nextBtn.onclick = () => {
   }
 };
 
-// --- Back Button Logic ---
 if (prevBtn) {
   prevBtn.onclick = () => {
-    // If we are at the result screen (restartBtn is visible)
     if (!restartBtn.classList.contains("hidden")) {
-      // Go back to the last question
-      // Don't change idx (it's already at last question index from loop)
       renderQuestion();
       return;
     }
-
-    // Normal back behavior
     if (idx > 0) {
       idx--;
       renderQuestion();
     } else {
-      // Back to start screen (keep answers)
       idx = -1;
       showStartScreen();
     }
@@ -592,7 +639,7 @@ if (prevBtn) {
 
 restartBtn.onclick = () => {
   idx = -1;
-  Object.keys(answers).forEach((k) => delete answers[k]); // Clear answers
+  Object.keys(answers).forEach((k) => delete answers[k]);
   showStartScreen();
 };
 
@@ -609,14 +656,12 @@ async function extractPdfText(file) {
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let text = "";
   const maxPages = Math.min(pdf.numPages, 12);
-
   for (let p = 1; p <= maxPages; p++) {
     const page = await pdf.getPage(p);
     const content = await page.getTextContent();
     const strings = content.items.map((it) => it.str);
     text += `\n\n--- Page ${p} ---\n` + strings.join(" ");
   }
-
   return text.slice(0, 18000);
 }
 
@@ -624,12 +669,10 @@ if (pdfInput && pdfStatus && aiBtn && aiOutput) {
   pdfInput.addEventListener("change", async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     pdfStatus.textContent = T("reading");
     aiBtn.disabled = true;
     aiOutput.classList.add("hidden");
     aiOutput.textContent = "";
-
     try {
       pdfText = await extractPdfText(file);
       pdfStatus.textContent = file.name;
@@ -644,7 +687,6 @@ if (pdfInput && pdfStatus && aiBtn && aiOutput) {
     aiBtn.disabled = true;
     aiOutput.classList.remove("hidden");
     aiOutput.textContent = T("generating");
-
     try {
       const payload = {
         goal: computeGoal(),
@@ -653,17 +695,14 @@ if (pdfInput && pdfStatus && aiBtn && aiOutput) {
         materialText: pdfText,
         locale: lang(),
       };
-
       const res = await fetch("/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) {
         throw new Error(await res.text());
       }
-
       const data = await res.json();
       aiOutput.textContent = data.output || "No output";
     } catch {
@@ -679,6 +718,3 @@ if (langSelect) {
 }
 
 setLangUI();
-
-
-
