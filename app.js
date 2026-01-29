@@ -21,15 +21,10 @@ let idx = -1;
 const answers = {};
 let pdfText = "";
 
-if (window.pdfjsLib) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-}
-
 const UI = {
   en: {
     assessment: "Assessment",
-    step: (a, b) => `Step ${a} of ${b}`,
+    step: (a,b) => `Step ${a} of ${b}`,
     completed: "Completed",
     ready: "Ready?",
     readyText: "Answer a short assessment and get a study plan.",
@@ -54,7 +49,7 @@ const UI = {
   },
   ar: {
     assessment: "الاختبار",
-    step: (a, b) => `الخطوة ${a} من ${b}`,
+    step: (a,b) => `الخطوة ${a} من ${b}`,
     completed: "اكتمل",
     ready: "جاهز؟",
     readyText: "جاوب على اختبار سريع وتطلع لك خطة مذاكرة.",
@@ -76,7 +71,7 @@ const UI = {
     gen: "توليد خطة بالذكاء الاصطناعي",
     generating: "جاري التوليد…",
     aiNotConnected: "الذكاء الاصطناعي غير متصل (ما فيه /api/plan). الاختبار شغال طبيعي.",
-  },
+  }
 };
 
 const questions = [
@@ -438,7 +433,6 @@ restartBtn.onclick = () => {
 };
 
 async function extractPdfText(file) {
-  if (!window.pdfjsLib) throw new Error("pdfjs not loaded");
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let text = "";
@@ -468,9 +462,8 @@ if (pdfInput && pdfStatus && aiBtn && aiOutput) {
       pdfText = await extractPdfText(file);
       pdfStatus.textContent = file.name;
       aiBtn.disabled = false;
-    } catch (err) {
-      console.error(err);
-      pdfStatus.textContent = `${T("failed")} (${err?.message || "unknown"})`;
+    } catch {
+      pdfStatus.textContent = T("failed");
       aiBtn.disabled = true;
     }
   });
@@ -495,13 +488,14 @@ if (pdfInput && pdfStatus && aiBtn && aiOutput) {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
 
       const data = await res.json();
       aiOutput.textContent = data.output || "No output";
-    } catch (err) {
-      console.error(err);
-      aiOutput.textContent = `${T("aiNotConnected")} (${err?.message || "unknown"})`;
+    } catch {
+      aiOutput.textContent = T("aiNotConnected");
     } finally {
       aiBtn.disabled = false;
     }
