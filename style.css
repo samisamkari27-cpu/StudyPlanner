@@ -12,6 +12,10 @@
   
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
   --radius: 16px;
+  
+  /* Status Colors for new features */
+  --warning: #f59e0b;
+  --info: #3b82f6;
 }
 
 * { box-sizing: border-box; }
@@ -54,6 +58,7 @@ body[dir="rtl"] {
   min-height: 100vh;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -84,10 +89,9 @@ body[dir="rtl"] {
   transition: 0.2s;
 }
 
-.langSelect:hover {
-  border-color: var(--text-muted);
-}
+.langSelect:hover { border-color: var(--text-muted); }
 
+/* Card */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -138,6 +142,28 @@ body[dir="rtl"] {
   margin-bottom: 24px;
 }
 
+/* Result Styles inside qText */
+.plan-block {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--card-border);
+}
+
+.plan-warning {
+  border-color: var(--warning);
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.plan-tip {
+  border-color: var(--info);
+  background: rgba(59, 130, 246, 0.1);
+  color: #93c5fd;
+}
+
+/* Choices */
 .choices {
   display: flex;
   flex-direction: column;
@@ -165,9 +191,7 @@ body[dir="rtl"] {
   transform: translateX(4px);
 }
 
-body[dir="rtl"] .choiceBtn:hover {
-  transform: translateX(-4px);
-}
+body[dir="rtl"] .choiceBtn:hover { transform: translateX(-4px); }
 
 .choiceBtn[style*="rgb(75, 107, 255)"] {
   background: rgba(99, 102, 241, 0.15) !important;
@@ -175,12 +199,12 @@ body[dir="rtl"] .choiceBtn:hover {
   box-shadow: 0 0 0 1px var(--primary);
 }
 
-/* Actions Section */
+/* Buttons */
 .actions {
   display: flex;
   gap: 12px;
   margin-top: auto;
-  flex-wrap: wrap; /* Important for small screens */
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -226,9 +250,9 @@ body[dir="rtl"] .choiceBtn:hover {
   border-color: var(--text-muted);
 }
 
-/* Ensure hidden class uses !important to override any other display rules */
 .hidden { display: none !important; }
 
+/* AI Section */
 .aiBox {
   margin-top: 32px;
   padding-top: 24px;
@@ -252,10 +276,7 @@ body[dir="rtl"] .choiceBtn:hover {
   letter-spacing: 1px;
 }
 
-.aiHint {
-  font-size: 13px;
-  color: var(--text-muted);
-}
+.aiHint { font-size: 13px; color: var(--text-muted); }
 
 .uploadLabel {
   display: flex;
@@ -301,6 +322,7 @@ body[dir="rtl"] .choiceBtn:hover {
   white-space: pre-wrap;
 }
 
+/* Footer Card */
 .footerCard {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid var(--card-border);
@@ -339,15 +361,10 @@ body[dir="rtl"] .choiceBtn:hover {
   line-height: 1.7;
 }
 
-.basisList li {
-  margin-bottom: 6px;
-}
+.basisList li { margin-bottom: 6px; }
+.basisList b { color: #e2e8f0; }
 
-.basisList b {
-  color: #e2e8f0;
-}
-
-/* Footer Styling */
+/* Footer */
 .footer {
   margin-top: auto;
   text-align: center;
@@ -384,12 +401,9 @@ body[dir="rtl"] .choiceBtn:hover {
   font-weight: 500;
 }
 
-.footerLink:hover {
-  text-decoration: underline;
-  opacity: 0.8;
-}
+.footerLink:hover { text-decoration: underline; opacity: 0.8; }
 
-/* Modal Styles */
+/* Modal */
 .modal {
   position: fixed;
   inset: 0;
@@ -427,11 +441,7 @@ body[dir="rtl"] .choiceBtn:hover {
   padding-bottom: 12px;
 }
 
-.modalHeader h3 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--text-main);
-}
+.modalHeader h3 { margin: 0; font-size: 18px; color: var(--text-main); }
 
 .closeBtn {
   background: transparent;
