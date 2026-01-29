@@ -1,4 +1,4 @@
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed" });
@@ -49,18 +49,19 @@ Task:
 4) Give high-yield tips.
 Return clean markdown.`;
 
-    const r = await fetch("https://api.openai.com/v1/responses", {
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-5.2",
-        input: [
+        model: "gpt-4.1-mini",
+        messages: [
           { role: "system", content: system },
           { role: "user", content: user },
         ],
+        temperature: 0.4,
       }),
     });
 
@@ -70,22 +71,9 @@ Return clean markdown.`;
     }
 
     const data = await r.json();
-
-    let out = "";
-    if (Array.isArray(data.output)) {
-      for (const item of data.output) {
-        if (item.content) {
-          for (const c of item.content) {
-            if (c.type === "output_text") out += c.text;
-          }
-        }
-      }
-    }
-
-    return res.status(200).json({ output: out || "No output returned." });
+    const out = data?.choices?.[0]?.message?.content || "No output returned.";
+    return res.status(200).json({ output: out });
   } catch (e) {
     return res.status(500).json({ output: e.message });
   }
-};
-
-Add AI planning API
+}
