@@ -145,7 +145,7 @@ const UI = {
     basisL4_2: "الذكاء الاصطناعي يقرأ السلايدات لتخصيص <b>المواضيع + الخطة اليومية</b>.",
     basisL4_3: "إذا لم يتصل الذكاء الاصطناعي، التطبيق يعمل بشكل طبيعي.",
     footerCredit: "© برمجة سامي",
-    footerPortfolio: `صُمم لمعرض أعمالي <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
+    footerPortfolio: `مجرد عمل بسيط لصفختي على <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
     footerDev: "الموقع تحت التجربة والتطوير",
     footerRef: "المراجع",
     refTitle: "المراجع",
@@ -679,3 +679,4 @@ if (langSelect) {
 }
 
 setLangUI();
+
