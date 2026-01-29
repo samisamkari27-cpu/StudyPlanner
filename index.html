@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>StudyCompass</title>
   <meta name="description" content="StudyCompass helps students choose an evidence-based study approach based on learning goal, time-to-exam, and difficulty." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -14,7 +19,6 @@
   <main class="container">
     <header class="header">
       <h1 class="title" id="siteTitle">Find your study style</h1>
-
       <div class="headerRight">
         <select id="langSelect" class="langSelect" aria-label="Language">
           <option value="en">English</option>
@@ -28,7 +32,6 @@
         <div class="meta">
           <span id="progressText" class="progressText">Step 0 of 16</span>
         </div>
-
         <div class="progressWrap" aria-hidden="true">
           <div id="progressBar" class="progressBar"></div>
         </div>
@@ -41,6 +44,7 @@
 
       <div class="actions">
         <button id="startBtn" class="btn primary">Start</button>
+        <button id="prevBtn" class="btn ghost hidden">Back</button>
         <button id="nextBtn" class="btn" disabled>Next</button>
         <button id="restartBtn" class="btn ghost hidden">Restart</button>
       </div>
@@ -108,13 +112,33 @@
     </section>
 
     <footer class="footer">
-      <span>© Made by Sami</span>
-      <span class="dot">•</span>
-      <span>Built for My GitHub portfolio</span>
-      <span class="dot">•</span>
-      <span>This site is under testing and development</span>
+      <div class="footerRow">
+        <span id="footerCredit">© Made by Sami</span>
+        <span class="dot">•</span>
+        <span id="footerPortfolio">Built for My GitHub portfolio</span>
+      </div>
+      <div class="footerRow">
+        <span id="footerDev">This site is under testing and development</span>
+        <span class="dot">•</span>
+        <button id="refBtn" class="footerLink">References</button>
+      </div>
     </footer>
   </main>
+
+  <div id="refModal" class="modal hidden">
+    <div class="modalContent">
+      <div class="modalHeader">
+        <h3 id="refTitle">References</h3>
+        <button id="closeRef" class="closeBtn">×</button>
+      </div>
+      <ul class="refList">
+        <li>Craik, F. I. M., & Lockhart, R. S. (1972). Levels of processing: A framework for memory research.</li>
+        <li>Craik, F. I. M. (2002). Levels of processing: Past, present, and future.</li>
+        <li>Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques.</li>
+        <li>Horvath, J. C., et al. (2018). On the irrelevance of neuromyths to teacher effectiveness.</li>
+      </ul>
+    </div>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
   <script src="app.js"></script>
