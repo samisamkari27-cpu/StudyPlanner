@@ -3,12 +3,14 @@ const qText = document.getElementById("qText");
 const choices = document.getElementById("choices");
 const startBtn = document.getElementById("startBtn");
 const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
 const restartBtn = document.getElementById("restartBtn");
 const progressText = document.getElementById("progressText");
 const progressBar = document.getElementById("progressBar");
 const pill = document.getElementById("pill");
 
 const langSelect = document.getElementById("langSelect");
+const siteTitle = document.getElementById("siteTitle");
 const aiTitle = document.getElementById("aiTitle");
 const aiHint = document.getElementById("aiHint");
 const uploadLabel = document.getElementById("uploadLabel");
@@ -17,12 +19,41 @@ const pdfStatus = document.getElementById("pdfStatus");
 const aiBtn = document.getElementById("aiBtn");
 const aiOutput = document.getElementById("aiOutput");
 
+const basisTitle = document.getElementById("basisTitle");
+const basisH1 = document.getElementById("basisH1");
+const basisL1_1 = document.getElementById("basisL1_1");
+const basisL1_2 = document.getElementById("basisL1_2");
+const basisL1_3 = document.getElementById("basisL1_3");
+const basisH2 = document.getElementById("basisH2");
+const basisL2_1 = document.getElementById("basisL2_1");
+const basisL2_2 = document.getElementById("basisL2_2");
+const basisL2_3 = document.getElementById("basisL2_3");
+const basisH3 = document.getElementById("basisH3");
+const basisL3_1 = document.getElementById("basisL3_1");
+const basisL3_2 = document.getElementById("basisL3_2");
+const basisL3_3 = document.getElementById("basisL3_3");
+const basisH4 = document.getElementById("basisH4");
+const basisL4_1 = document.getElementById("basisL4_1");
+const basisL4_2 = document.getElementById("basisL4_2");
+const basisL4_3 = document.getElementById("basisL4_3");
+const footerCredit = document.getElementById("footerCredit");
+const footerPortfolio = document.getElementById("footerPortfolio");
+const footerDev = document.getElementById("footerDev");
+
+const refBtn = document.getElementById("refBtn");
+const refModal = document.getElementById("refModal");
+const closeRef = document.getElementById("closeRef");
+const refTitle = document.getElementById("refTitle");
+
 let idx = -1;
 const answers = {};
 let pdfText = "";
 
+const githubURL = "https://github.com/samisamkari27-cpu";
+
 const UI = {
   en: {
+    siteTitle: "Find your study style",
     assessment: "Assessment",
     step: (a,b) => `Step ${a} of ${b}`,
     completed: "Completed",
@@ -36,6 +67,7 @@ const UI = {
     plan: "Plan",
     start: "Start",
     next: "Next",
+    back: "Back",
     restart: "Restart",
     aiTitle: "AI (Not available for now)",
     aiHint: "Upload your slides PDF to tailor the plan to your course content.",
@@ -46,8 +78,31 @@ const UI = {
     gen: "Generate AI Plan",
     generating: "Generating…",
     aiNotConnected: "AI not connected (missing /api/plan). The assessment still works.",
+    basisTitle: "How the style is chosen (criteria)",
+    basisH1: "1) Goal (what the exam rewards)",
+    basisL1_1: "<b>Memorization</b>: prioritize retrieval practice + spaced review.",
+    basisL1_2: "<b>Understanding</b>: prioritize self-explanation + “why/how” prompts + quick recall checks.",
+    basisL1_3: "<b>Application</b>: prioritize worked examples → lots of practice → error log.",
+    basisH2: "2) Time-to-exam (what’s realistic)",
+    basisL2_1: "<b>Short</b>: cut scope, drill high-yield, test yourself frequently.",
+    basisL2_2: "<b>Medium</b>: mix learning + consolidation, spaced sessions.",
+    basisL2_3: "<b>Long</b>: build foundations first, then transfer practice.",
+    basisH3: "3) Difficulty (how hard it is for you)",
+    basisL3_1: "<b>Easy</b>: push to higher-level testing faster.",
+    basisL3_2: "<b>Medium</b>: alternate learn → test → fix gaps.",
+    basisL3_3: "<b>Hard</b>: start core concepts, reduce materials, track mistakes.",
+    basisH4: "AI role (not available for now)",
+    basisL4_1: "Assessment chooses the <b>strategy</b>.",
+    basisL4_2: "AI reads your slides to tailor the <b>topics + daily plan</b>.",
+    basisL4_3: "If AI isn’t connected, the app still works normally.",
+    footerCredit: "© Made by Sami",
+    footerPortfolio: `Built for <a href="${githubURL}" target="_blank" class="footerLink">My GitHub portfolio</a>`,
+    footerDev: "This site is under testing and development",
+    footerRef: "References",
+    refTitle: "References",
   },
   ar: {
+    siteTitle: "اكتشف أسلوب مذاكرتك",
     assessment: "الاختبار",
     step: (a,b) => `الخطوة ${a} من ${b}`,
     completed: "اكتمل",
@@ -61,6 +116,7 @@ const UI = {
     plan: "الخطة",
     start: "ابدأ",
     next: "التالي",
+    back: "السابق",
     restart: "إعادة",
     aiTitle: "ذكاء اصطناعي (غير متاح حاليا)",
     aiHint: "ارفع PDF السلايدات عشان يخصص الخطة على محتوى مادتك.",
@@ -71,6 +127,28 @@ const UI = {
     gen: "توليد خطة بالذكاء الاصطناعي",
     generating: "جاري التوليد…",
     aiNotConnected: "الذكاء الاصطناعي غير متصل (ما فيه /api/plan). الاختبار شغال طبيعي.",
+    basisTitle: "كيف يتم اختيار الأسلوب (المعايير)",
+    basisH1: "١) الهدف (على ماذا يركز الاختبار)",
+    basisL1_1: "<b>الحفظ</b>: الأولوية لاسترجاع المعلومات + مراجعة متباعدة.",
+    basisL1_2: "<b>الفهم</b>: الأولوية للشرح الذاتي + أسئلة 'لماذا/كيف' + اختبارات استرجاع سريعة.",
+    basisL1_3: "<b>التطبيق</b>: الأولوية للأمثلة المحلولة ← تكثيف التمارين ← سجل الأخطاء.",
+    basisH2: "٢) الوقت المتبقي (ما هو الواقعي)",
+    basisL2_1: "<b>قصير</b>: قلل الكمية، ركز على المهم، اختبر نفسك بشكل متكرر.",
+    basisL2_2: "<b>متوسط</b>: امزج بين التعلم والتثبيت، جلسات متباعدة.",
+    basisL2_3: "<b>طويل</b>: ابنِ الأساسيات أولاً، ثم انتقل للتطبيق العملي.",
+    basisH3: "٣) الصعوبة (مدى صعوبة المادة عليك)",
+    basisL3_1: "<b>سهل</b>: انتقل لمستوى اختبار أصعب بشكل أسرع.",
+    basisL3_2: "<b>متوسط</b>: بدّل بين: تعلم ← اختبار ← سد الثغرات.",
+    basisL3_3: "<b>صعب</b>: ابدأ بالمفاهيم الأساسية، قلل المصادر، تتبع الأخطاء.",
+    basisH4: "دور الذكاء الاصطناعي (غير متاح حالياً)",
+    basisL4_1: "الاختبار يحدد <b>الاستراتيجية</b>.",
+    basisL4_2: "الذكاء الاصطناعي يقرأ السلايدات لتخصيص <b>المواضيع + الخطة اليومية</b>.",
+    basisL4_3: "إذا لم يتصل الذكاء الاصطناعي، التطبيق يعمل بشكل طبيعي.",
+    footerCredit: "© برمجة سامي",
+    footerPortfolio: `صُمم لمعرض أعمالي <a href="${githubURL}" target="_blank" class="footerLink">(GitHub)</a>`,
+    footerDev: "الموقع تحت التجربة والتطوير",
+    footerRef: "المراجع",
+    refTitle: "المراجع",
   }
 };
 
@@ -81,7 +159,7 @@ const questions = [
     text: { en: "Pick the closest option.", ar: "اختر الأقرب." },
     options: [
       { label: { en: "Definitions / direct facts", ar: "تعريفات / حقائق مباشرة" }, value: "memorization" },
-      { label: { en: "Explain concepts in your own words", ar: "شرح المفاهيم بكلامك" }, value: "understanding" },
+      { label: { en: "Explain concepts in your own words", ar: "شرح الافكار بمفهومك" }, value: "understanding" },
       { label: { en: "Solve problems / apply methods", ar: "حل مسائل / تطبيق" }, value: "application" },
       { label: { en: "A mix of all", ar: "مزيج" }, value: "mixed" },
     ],
@@ -210,8 +288,8 @@ const questions = [
     options: [
       { label: { en: "Light and straightforward", ar: "خفيف وواضح" }, value: 0 },
       { label: { en: "Moderate", ar: "متوسط" }, value: 1 },
-      { label: { en: "Heavy and packed", ar: "ثقيل ومكدس" }, value: 2 },
-      { label: { en: "Heavy + cumulative", ar: "ثقيل وتراكمي" }, value: 3 },
+      { label: { en: "Heavy and packed", ar: "ثقيل" }, value: 2 },
+      { label: { en: "Heavy + cumulative", ar: "ثقيل + متراكم" }, value: 3 },
     ],
   },
   {
@@ -268,6 +346,7 @@ function setLangUI() {
   if (pill) pill.textContent = T("assessment");
   startBtn.textContent = T("start");
   nextBtn.textContent = T("next");
+  if (prevBtn) prevBtn.textContent = T("back");
   restartBtn.textContent = T("restart");
 
   if (aiTitle) aiTitle.textContent = T("aiTitle");
@@ -277,14 +356,58 @@ function setLangUI() {
   }
   if (pdfStatus && !pdfText) pdfStatus.textContent = T("noFile");
 
+  if (siteTitle) siteTitle.textContent = T("siteTitle");
+
+  if (basisTitle) basisTitle.textContent = T("basisTitle");
+  if (basisH1) basisH1.textContent = T("basisH1");
+  if (basisL1_1) basisL1_1.innerHTML = T("basisL1_1");
+  if (basisL1_2) basisL1_2.innerHTML = T("basisL1_2");
+  if (basisL1_3) basisL1_3.innerHTML = T("basisL1_3");
+
+  if (basisH2) basisH2.textContent = T("basisH2");
+  if (basisL2_1) basisL2_1.innerHTML = T("basisL2_1");
+  if (basisL2_2) basisL2_2.innerHTML = T("basisL2_2");
+  if (basisL2_3) basisL2_3.innerHTML = T("basisL2_3");
+
+  if (basisH3) basisH3.textContent = T("basisH3");
+  if (basisL3_1) basisL3_1.innerHTML = T("basisL3_1");
+  if (basisL3_2) basisL3_2.innerHTML = T("basisL3_2");
+  if (basisL3_3) basisL3_3.innerHTML = T("basisL3_3");
+
+  if (basisH4) basisH4.textContent = T("basisH4");
+  if (basisL4_1) basisL4_1.innerHTML = T("basisL4_1");
+  if (basisL4_2) basisL4_2.innerHTML = T("basisL4_2");
+  if (basisL4_3) basisL4_3.innerHTML = T("basisL4_3");
+
+  if (footerCredit) footerCredit.textContent = T("footerCredit");
+  if (footerPortfolio) footerPortfolio.innerHTML = T("footerPortfolio");
+  if (footerDev) footerDev.textContent = T("footerDev");
+  if (refBtn) refBtn.textContent = T("footerRef");
+  if (refTitle) refTitle.textContent = T("refTitle");
+
   if (idx === -1) {
-    qTitle.textContent = T("ready");
-    qText.textContent = T("readyText");
-    progressText.textContent = T("step")(0, questions.length);
-    progressBar.style.width = "0%";
+    showStartScreen();
   } else {
     renderQuestion();
   }
+}
+
+// Helper to show start screen and hide others
+function showStartScreen() {
+  qTitle.textContent = T("ready");
+  qText.textContent = T("readyText");
+  progressText.textContent = T("step")(0, questions.length);
+  progressBar.style.width = "0%";
+  
+  choices.innerHTML = "";
+  
+  startBtn.classList.remove("hidden");
+  nextBtn.disabled = true;
+  nextBtn.classList.remove("hidden");
+  
+  // Hide Back and Restart on start screen
+  if(prevBtn) prevBtn.classList.add("hidden");
+  restartBtn.classList.add("hidden");
 }
 
 function renderQuestion() {
@@ -292,7 +415,16 @@ function renderQuestion() {
   qTitle.textContent = S(q.title);
   qText.textContent = S(q.text);
   choices.innerHTML = "";
-  nextBtn.disabled = true;
+  
+  // Manage buttons visibility
+  startBtn.classList.add("hidden");
+  restartBtn.classList.add("hidden");
+  if(prevBtn) prevBtn.classList.remove("hidden");
+  nextBtn.classList.remove("hidden");
+
+  // Determine if next should be enabled (if answer exists)
+  const hasAnswer = answers[q.id] !== undefined;
+  nextBtn.disabled = !hasAnswer;
 
   progressText.textContent = T("step")(idx + 1, questions.length);
   progressBar.style.width = `${((idx + 1) / questions.length) * 100}%`;
@@ -301,10 +433,25 @@ function renderQuestion() {
     const btn = document.createElement("button");
     btn.className = "choiceBtn";
     btn.textContent = S(opt.label);
+    
+    // Highlight if previously selected
+    if (answers[q.id] === opt.value) {
+       btn.style.borderColor = "#4b6bff";
+       btn.style.background = "rgba(99, 102, 241, 0.15)";
+    }
+
     btn.onclick = () => {
       answers[q.id] = opt.value;
-      [...choices.children].forEach((b) => (b.style.borderColor = ""));
+      
+      // Reset styles for all siblings
+      [...choices.children].forEach((b) => {
+          b.style.borderColor = "";
+          b.style.background = "";
+      });
+      // Set style for clicked
       btn.style.borderColor = "#4b6bff";
+      btn.style.background = "rgba(99, 102, 241, 0.15)";
+      
       nextBtn.disabled = false;
     };
     choices.appendChild(btn);
@@ -399,13 +546,14 @@ function computeResult() {
   choices.innerHTML = "";
   progressText.textContent = T("completed");
   progressBar.style.width = "100%";
-  nextBtn.disabled = true;
+  
+  // Hide Next, Show Restart & Back (Back allows going back to Q16)
+  nextBtn.classList.add("hidden");
   restartBtn.classList.remove("hidden");
+  if(prevBtn) prevBtn.classList.remove("hidden");
 }
 
 startBtn.onclick = () => {
-  startBtn.classList.add("hidden");
-  restartBtn.classList.add("hidden");
   idx = 0;
   renderQuestion();
 };
@@ -419,18 +567,42 @@ nextBtn.onclick = () => {
   }
 };
 
+// --- Back Button Logic ---
+if (prevBtn) {
+  prevBtn.onclick = () => {
+    // If we are at the result screen (restartBtn is visible)
+    if (!restartBtn.classList.contains("hidden")) {
+      // Go back to the last question
+      // Don't change idx (it's already at last question index from loop)
+      renderQuestion();
+      return;
+    }
+
+    // Normal back behavior
+    if (idx > 0) {
+      idx--;
+      renderQuestion();
+    } else {
+      // Back to start screen (keep answers)
+      idx = -1;
+      showStartScreen();
+    }
+  };
+}
+
 restartBtn.onclick = () => {
   idx = -1;
-  Object.keys(answers).forEach((k) => delete answers[k]);
-  startBtn.classList.remove("hidden");
-  restartBtn.classList.add("hidden");
-  nextBtn.disabled = true;
-  choices.innerHTML = "";
-  qTitle.textContent = T("ready");
-  qText.textContent = T("readyText");
-  progressText.textContent = T("step")(0, questions.length);
-  progressBar.style.width = "0%";
+  Object.keys(answers).forEach((k) => delete answers[k]); // Clear answers
+  showStartScreen();
 };
+
+if (refBtn && refModal && closeRef) {
+  refBtn.onclick = () => refModal.classList.remove("hidden");
+  closeRef.onclick = () => refModal.classList.add("hidden");
+  refModal.onclick = (e) => {
+    if (e.target === refModal) refModal.classList.add("hidden");
+  };
+}
 
 async function extractPdfText(file) {
   const arrayBuffer = await file.arrayBuffer();
